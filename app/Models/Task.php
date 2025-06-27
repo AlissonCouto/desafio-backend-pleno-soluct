@@ -12,6 +12,14 @@ class Task extends Model
         'status' => TaskStatus::class,
     ];
 
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'due_date',
+        'user_id',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
