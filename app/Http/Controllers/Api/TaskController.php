@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Services\TaskService;
 use App\Classes\ApiResponseClass;
 
@@ -41,6 +42,19 @@ class TaskController extends Controller
             ['task' => $result['task']],
             $result['message'],
             201
+        );
+    }
+
+    public function update(UpdateTaskRequest $request, $id)
+    {
+        $userId = auth()->id();
+
+        $result = $this->service->update($id, $request->validated(), $userId);
+
+        return ApiResponseClass::success(
+            ['task' => $result['task']],
+            $result['message'],
+            $result['code'] ?? 200
         );
     }
 }

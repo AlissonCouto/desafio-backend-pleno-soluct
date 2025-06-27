@@ -57,4 +57,27 @@ class TaskService
             'task' => $task,
         ];
     }
+
+    public function update(int $id, array $data, int $userId): array
+    {
+        $task = Task::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$task) {
+            return [
+                'ok' => false,
+                'message' => 'Tarefa não encontrada ou não pertence ao usuário',
+                'code' => 404
+            ];
+        }
+
+        $task->update($data);
+
+        return [
+            'ok' => true,
+            'message' => 'Tarefa atualizada com sucesso',
+            'task' => $task
+        ];
+    }
 }
