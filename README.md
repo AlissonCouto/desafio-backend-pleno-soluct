@@ -39,7 +39,7 @@ API RESTful para Gestão de Tarefas desenvolvida como parte do processo seletivo
 
 ```bash
 # Clone este repositório
-git clone https://github.com/seu-usuario/desafio-backend-pleno-soluct.git
+git clone https://github.com/AlissonCouto/desafio-backend-pleno-soluct.git
 cd desafio-backend-pleno-soluct
 
 # Copie o .env
