@@ -80,4 +80,27 @@ class TaskService
             'task' => $task
         ];
     }
+
+    public function destroy(int $id, int $userId): array
+    {
+        $task = Task::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$task) {
+            return [
+                'ok' => false,
+                'message' => 'Tarefa não encontrada ou não pertence ao usuário',
+                'code' => 404
+            ];
+        }
+
+        $task->delete();
+
+        return [
+            'ok' => true,
+            'message' => 'Tarefa deletada com sucesso',
+            'code' => 200
+        ];
+    }
 }

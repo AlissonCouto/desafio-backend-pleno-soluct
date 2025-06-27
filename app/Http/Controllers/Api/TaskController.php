@@ -57,4 +57,17 @@ class TaskController extends Controller
             $result['code'] ?? 200
         );
     }
+
+    public function destroy($id)
+    {
+        $userId = auth()->id();
+
+        $result = $this->service->destroy($id, $userId);
+
+        return ApiResponseClass::success(
+            null,
+            $result['message'],
+            $result['code']
+        );
+    }
 }
