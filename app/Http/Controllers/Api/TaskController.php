@@ -9,7 +9,8 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Services\TaskService;
 use App\Classes\ApiResponseClass;
-
+use App\Models\TaskHistory;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -68,6 +69,32 @@ class TaskController extends Controller
             null,
             $result['message'],
             $result['code']
+        );
+    }
+
+    public function history($id)
+    {
+        $userId = auth()->id();
+
+        $task = Task::where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$task) {
+            return ApiResponseClass::error(
+                'Tarefa não encontrada ou não pertence ao usuário',
+                404
+            );
+        }
+
+        $history = TaskHistory::where('task_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return ApiResponseClass::success(
+            ['history' => $history],
+            'Histórico de alterações recuperado com sucesso',
+            200
         );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Task;
+use App\Models\TaskHistory;
 
 class TaskService
 {
@@ -70,6 +71,21 @@ class TaskService
                 'message' => 'Tarefa não encontrada ou não pertence ao usuário',
                 'code' => 404
             ];
+        }
+
+        // Registrando o histórico
+        foreach ($data as $field => $newValue) {
+            $oldValue = $task->$field;
+
+            if ($oldValue != $newValue) {
+                TaskHistory::create([
+                    'task_id' => $task->id,
+                    'user_id' => $userId,
+                    'field_changed' => $field,
+                    'old_value' => $oldValue,
+                    'new_value' => $newValue,
+                ]);
+            }
         }
 
         $task->update($data);

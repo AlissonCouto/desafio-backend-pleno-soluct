@@ -12,4 +12,5 @@ Route::post('logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tasks', TaskController::class);
+    Route::get('tasks/{id}/history', [TaskController::class, 'history']);
 });
