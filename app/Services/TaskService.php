@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
+
 use App\Models\Task;
 use App\Models\TaskHistory;
 
@@ -10,30 +12,35 @@ class TaskService
 
     public function index(array $filters, int $userId): array
     {
-        $query = Task::where('user_id', $userId);
+        $cacheKey = 'tasks_index_user_' . $userId . '_' . md5(json_encode($filters));
 
-        if (!empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
+        $tasks = Cache::remember($cacheKey, now()->addMinutes(1), function () use ($filters, $userId) {
+            $query = Task::where('user_id', $userId);
 
-        if (!empty($filters['title'])) {
-            $query->where('title', 'like', '%' . $filters['title'] . '%');
-        }
+            if (!empty($filters['status'])) {
+                $query->where('status', $filters['status']);
+            }
 
-        if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
-            $query->whereBetween('created_at', [$filters['created_from'], $filters['created_to']]);
-        }
+            if (!empty($filters['title'])) {
+                $query->where('title', 'like', '%' . $filters['title'] . '%');
+            }
 
-        if (!empty($filters['due_from']) && !empty($filters['due_to'])) {
-            $query->whereBetween('due_date', [$filters['due_from'], $filters['due_to']]);
-        }
+            if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
+                $query->whereBetween('created_at', [$filters['created_from'], $filters['created_to']]);
+            }
 
-        $orderBy = $filters['order_by'] ?? 'created_at';
-        $direction = $filters['direction'] ?? 'desc';
-        $query->orderBy($orderBy, $direction);
+            if (!empty($filters['due_from']) && !empty($filters['due_to'])) {
+                $query->whereBetween('due_date', [$filters['due_from'], $filters['due_to']]);
+            }
 
-        $perPage = $filters['per_page'] ?? 10;
-        $tasks = $query->paginate($perPage);
+            $orderBy = $filters['order_by'] ?? 'created_at';
+            $direction = $filters['direction'] ?? 'desc';
+            $query->orderBy($orderBy, $direction);
+
+            $perPage = $filters['per_page'] ?? 10;
+
+            return $query->paginate($perPage);
+        });
 
         return [
             'ok' => true,
