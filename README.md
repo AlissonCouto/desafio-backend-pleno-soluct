@@ -183,7 +183,7 @@ Lista tarefas do usuário autenticado, com filtros, paginação e ordenação.
 
 **Parâmetros de filtro (query string):**
 
-- `status`: pending, in_progress, completed, cancelled
+- `status`: pendente, em_andamento, completed, cancelled
 - `title`: busca textual parcial
 - `created_from` e `created_to`: datas de criação (YYYY-MM-DD)
 - `due_from` e `due_to`: datas de vencimento (YYYY-MM-DD)
@@ -194,7 +194,7 @@ Lista tarefas do usuário autenticado, com filtros, paginação e ordenação.
 **Exemplo de chamada completa:**
 
 ```
-GET /api/v1/tasks?status=pending&per_page=5
+GET /api/v1/tasks?status=pendente&per_page=1
 ```
 
 **Retorno esperado:**
@@ -222,7 +222,7 @@ Cria uma nova tarefa.
 {
   "title": "Estudar Docker",
   "description": "Finalizar estudo de dockerização de projetos Laravel",
-  "status": "pending",
+  "status": "pendente",
   "due_date": "2025-06-30"
 }
 ```
@@ -271,7 +271,7 @@ Atualiza uma tarefa.
 {
   "title": "Estudar Docker atualizado",
   "description": "Atualizando descrição",
-  "status": "in_progress",
+  "status": "em_andamento",
   "due_date": "2025-07-01"
 }
 ```
@@ -322,8 +322,8 @@ Lista o histórico de alterações de uma tarefa específica.
     {
       "id": 1,
       "field_changed": "status",
-      "old_value": "pending",
-      "new_value": "in_progress",
+      "old_value": "pendente",
+      "new_value": "em_andamento",
       "created_at": "2025-06-27T12:00:00.000000Z"
     }
   ]
